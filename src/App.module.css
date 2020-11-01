@@ -1,0 +1,36 @@
+.Container {
+  background-color: black;
+  color: #f0f2f6;
+
+  min-height: 100vh;
+}
+
+.MainContent {
+  padding: 50px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.GraphContainer {
+  height: 250px;
+  width: 500px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #f0f2f6;
+}
+
+.FeedsContainer {
+  min-width: 500px;
+}
+
+.FeedContent {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
