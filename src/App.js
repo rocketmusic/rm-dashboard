@@ -1,67 +1,78 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import uniqid from "uniqid";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import { FaHeart, FaUser, FaMusic } from "react-icons/fa";
-
-import graph1Pic from "./assets/graph-1.png";
-import graph2FunkPic from "./assets/graph-2-funk.png";
-import graph2SertanejoPic from "./assets/graph-2-sertanejo.png";
+import Header from "./components/Header/Header";
+import Graph from "./components/Graph/Graph";
+import Feed from "./components/Feed/Feed";
+import LikeCard from "./components/LikeCard/LikeCard";
+import ArtistCard from "./components/ArtistCard/ArtistCard";
+import SongCard from "./components/SongCard/SongCard";
+import { genLikes, genArtists, genSongs } from "./utils";
 
 import styles from "./App.module.css";
 
 const App = () => {
-  const [selectedGenre, setSelectedGenre] = useState();
-  const [selectedFeed, setSelectedFeed] = useState("LIKES");
+  const [currFeed, setCurrFeed] = useState("LIKES");
+  const [likes, setLikes] = useState(genLikes());
+  const [artists, setArtists] = useState(genArtists());
+  const [songs, setSongs] = useState(genSongs());
 
-  let graph2;
-  switch (selectedGenre) {
-    case "FUNK":
-      graph2 = <img src={graph2FunkPic} alt="Graph 1" height="250px" />;
+  console.log(likes);
+
+  let feed;
+  switch (currFeed) {
+    case "LIKES":
+      feed = (
+        <Feed title="Likes" icon={<FaHeart />}>
+          {likes.map((like, idx) => (
+            <LikeCard key={uniqid()} data={like} />
+          ))}
+        </Feed>
+      );
       break;
-    case "SERTANEJO":
-      graph2 = <img src={graph2SertanejoPic} alt="Graph 1" height="250px" />;
+    case "ARTISTS":
+      feed = (
+        <Feed title="Artistas" icon={<FaUser />}>
+          {artists.map((artist, idx) => (
+            <ArtistCard key={idx} data={artist} />
+          ))}
+        </Feed>
+      );
+      break;
+    case "SONGS":
+      feed = (
+        <Feed title="Lançamentos" icon={<FaMusic />}>
+          {songs.map((song, idx) => (
+            <SongCard key={idx} data={song} />
+          ))}
+        </Feed>
+      );
       break;
     default:
-      graph2 = (
-        <div className={`${styles.GraphContainer} rounded`}>
-          <em>Selecione um gênero</em>
-        </div>
-      );
   }
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setLikes((likes) => [{ artistId: 121212, likes: 1000 }, ...likes]);
+  //   }, 2000);
+  // });
 
   return (
     <div className={styles.Container}>
-      <div>Header</div>
+      <Header />
       <div className={styles.MainContent}>
         <div>
-          <div className="mb-5">
-            <h2 className="mb-3">Artistas em alta</h2>
-            <img src={graph1Pic} alt="Graph 1" height="250px" />
-          </div>
-          <div>
-            <h2 className="mb-3">Artistas por gênero</h2>
-            <div className="mb-2">
-              <Button
-                variant="light"
-                className="px-3 mr-2"
-                onClick={() => setSelectedGenre("FUNK")}
-                active={selectedGenre === "FUNK"}
-                disabled={selectedGenre === "FUNK"}
-              >
-                Funk
-              </Button>
-              <Button
-                variant="light"
-                className="px-3"
-                onClick={() => setSelectedGenre("SERTANEJO")}
-                active={selectedGenre === "SERTANEJO"}
-                disabled={selectedGenre === "SERTANEJO"}
-              >
-                Sertanejo
-              </Button>
-            </div>
-            {graph2}
-          </div>
+          <Graph title="Artistas em alta" graphIdx={0} className="mb-5" />
+          <Graph
+            title="Artistas em alta por gênero"
+            graphIdx={1}
+            buttons={[
+              { label: "Funk", graphIdx: 1 },
+              { label: "Sertanejo", graphIdx: 2 },
+            ]}
+          />
         </div>
 
         <div className={styles.FeedsContainer}>
@@ -71,35 +82,33 @@ const App = () => {
               <Button
                 variant="dark"
                 className="d-flex align-items-center px-4 py-3"
-                onClick={() => setSelectedFeed("LIKES")}
-                active={selectedFeed === "LIKES"}
-                disabled={selectedFeed === "LIKES"}
+                onClick={() => setCurrFeed("LIKES")}
+                active={currFeed === "LIKES"}
+                disabled={currFeed === "LIKES"}
               >
                 <FaHeart />
               </Button>
               <Button
                 variant="dark"
                 className="d-flex align-items-center px-4 py-3"
-                onClick={() => setSelectedFeed("ARTISTS")}
-                active={selectedFeed === "ARTISTS"}
-                disabled={selectedFeed === "ARTISTS"}
+                onClick={() => setCurrFeed("ARTISTS")}
+                active={currFeed === "ARTISTS"}
+                disabled={currFeed === "ARTISTS"}
               >
                 <FaUser />
               </Button>
               <Button
                 variant="dark"
                 className="d-flex align-items-center px-4 py-3"
-                onClick={() => setSelectedFeed("SONGS")}
-                active={selectedFeed === "SONGS"}
-                disabled={selectedFeed === "SONGS"}
+                onClick={() => setCurrFeed("SONGS")}
+                active={currFeed === "SONGS"}
+                disabled={currFeed === "SONGS"}
               >
                 <FaMusic />
               </Button>
             </ButtonGroup>
           </div>
-          <div className={`${styles.FeedContent} rounded bg-dark shadow-lg`}>
-            CONTEÚDO DO FEED: {selectedFeed}
-          </div>
+          {feed}
         </div>
       </div>
     </div>

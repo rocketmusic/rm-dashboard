@@ -1,0 +1,8 @@
+.Feed {
+  height: 65vh;
+}
+
+.FeedContent {
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+}
